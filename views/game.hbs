@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <style>
+        h2 {
+            color: brown;
+            font-family: "Arial Narrow", serif;
+            font-size: 25px;
+            position: center;
+        }
+        #result{
+            color: red;
+            font-size: 15px;
+        }
+        #board{
+            border: 5px;
+            background-color: beige;
+        }
+    </style>
+
+</head>
+<body bgcolor="#ffebcd">
+<div align="center">
+    <h2>{{head}}</h2>
+</div><br>
+
+<div align="center" id="board">
+    <table>
+        <tr >
+            <td height="100">
+                <div align="center" id="random1">Calculation</div>
+            </td>
+        </tr>
+        <br>
+        <tr>
+            <button onclick="generate()" type="button" style="padding: 5px">Generate</button>
+        </tr>
+        <tr>
+            <td>
+                <form id="ClearForm">
+                    <label>Answer:</label>
+                    <label for="insert"></label><input type="number" id="insert" >
+                    <button onclick="Check()" type="button" >Check</button>
+                </form>
+            </td>
+        </tr>
+        <tr><td><div id="result" align="center"></div></td></tr>
+        <tr>
+            <td>
+                <table style="width: 100%; border: 2px solid darkred">
+                    <tr>
+                        <th>CORRECT</th>
+                        <th>INCORRECT</th>
+                    </tr>
+                    <tr>
+                        <td><div id="correct">0</div></td>
+                        <td><div id="wrong">0</div></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script>
+    var equals;
+    var correct_value = parseInt(document.getElementById('correct').innerHTML);
+    var wrong_value = parseInt(document.getElementById('wrong').innerHTML);
+
+    function generate() {
+       var a = Math.floor((Math.random() * 10));
+       var b = Math.floor((Math.random() * 10));
+       var format = (a + " * " + b);
+       equals = (a * b);
+        document.getElementById("random1").innerHTML = format;
+    }
+
+    function Check() {
+        if (document.getElementById("insert").value === ""){
+            document.getElementById("result").innerHTML = "An answer is required!"
+        }else {
+            if (document.getElementById("insert").value === equals.toString() ) {
+                document.getElementById("correct").innerHTML = correct_value++;
+                document.getElementById("result").innerHTML = "Correct Answer!";
+                document.getElementById("ClearForm").reset();
+                generate()
+            }
+            else {
+                document.getElementById("result").innerHTML = "Wrong Answer!";
+                document.getElementById("wrong").innerHTML = wrong_value++;
+                document.getElementById("ClearForm").reset();
+                generate()
+            }
+        }
+    }
+</script>
+</body>
+</html>
