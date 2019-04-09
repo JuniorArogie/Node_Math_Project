@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>{{title}}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
     <style>
         h2 {
             color: brown;
@@ -22,6 +24,16 @@
 
 </head>
 <body bgcolor="#ffebcd">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" href="/">Home </a>
+            <a class="nav-item nav-link active" href="/register">Register <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="/verify">Sign In </a>
+        </div>
+    </div>
+</nav>
+
 <div align="center">
     <h2>{{head}}</h2>
 </div><br>
@@ -68,6 +80,8 @@
     var equals;
     var correct_value = parseInt(document.getElementById('correct').innerHTML);
     var wrong_value = parseInt(document.getElementById('wrong').innerHTML);
+    var correct_list = [];
+    var wrong_list = [];
 
     function generate() {
        var a = Math.floor((Math.random() * 10));
@@ -82,14 +96,18 @@
             document.getElementById("result").innerHTML = "An answer is required!"
         }else {
             if (document.getElementById("insert").value === equals.toString() ) {
-                document.getElementById("correct").innerHTML = correct_value++;
+                //correct_list.push(++correct_value);
+                //document.getElementById("correct").innerHTML = correct_list;
+                document.getElementById("correct").innerHTML = ++correct_value;
                 document.getElementById("result").innerHTML = "Correct Answer!";
                 document.getElementById("ClearForm").reset();
                 generate()
             }
             else {
                 document.getElementById("result").innerHTML = "Wrong Answer!";
-                document.getElementById("wrong").innerHTML = wrong_value++;
+                //wrong_list.push(++wrong_value);
+                //document.getElementById("wrong").innerHTML = wrong_list;
+                document.getElementById("wrong").innerHTML = ++wrong_value;
                 document.getElementById("ClearForm").reset();
                 generate()
             }
