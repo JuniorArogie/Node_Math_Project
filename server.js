@@ -5,6 +5,11 @@ const expressValidator = require('express-validator');
 const session = require('express-session');
 const hbs = require('hbs');
 const utils = require('./utils');
+const MongoStore = require('connect-mongo')(session);
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/registration', { useNewUrlParser: true });
+var db = mongoose.connection;
 
 
 const user = require('./routes/user.route');
@@ -24,7 +29,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookeParser());
 
-app.use(session({ secret: 'junior', resave: true, saveUninitialized: false,}));
+app.use(
+    session({
+        secret: 'junior',
+        resave: true,
+        saveUninitialized: false,
+        store: new MongoStore(
+            {mongooseConnection: db
+            })
+    }));
 
 app.use(expressValidator());
 
@@ -39,12 +52,18 @@ app.get('/', (request, response) => {
     });
 });
 
-app.use((request, response, next) => {
-    response.render('maintenance.hbs', {
-        title: 'Maintenance page',
-    });
-    next()
-});
+/*function requiresLogin(req, res, next) {
+    console.log("before " + req.session.userId);
+    if (existing_user.authenticate) {
+        console.log(existing_user.authenticate);
+    //var db = utils.getDb();
+    //db.collection('registration').findOne({username: req.body.username}, function(err, user) {
+        return next();
+    }else {
+        res.send('You must be logged in to view this page.');
+    }
+}*/
+
 
 app.get('/mathgame', (request, response) => {
     response.render('game.hbs', {
@@ -53,6 +72,20 @@ app.get('/mathgame', (request, response) => {
     });
 });
 
+app.get('*', (request, response) => {
+    response.render('404.hbs', {
+        title: '404 Error',
+        head: 'Oops! 404',
+        error: 'Page Not Found'
+    })
+});
+
+/*app.use((request, response, next) => {
+    response.render('maintenance.hbs', {
+        title: 'Maintenance page',
+    });
+    next()
+});*/
 
 app.listen(8080, () => {
     console.log('Server is up on the port 8080');
