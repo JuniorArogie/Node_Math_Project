@@ -48,7 +48,11 @@
         <br>
         <tr>
             <button onclick="generate()" type="button" style="padding: 5px">Generate</button>
-        </tr>
+        </tr><br>
+        <tr>
+            <button onclick="Save()" type="button" style="padding: 5px">Save</button>
+        </tr><br>
+
         <tr>
             <td>
                 <form id="ClearForm">
@@ -77,11 +81,13 @@
 </div>
 
 <script>
+    var file = "game_state.json";
     var equals;
     var correct_value = parseInt(document.getElementById('correct').innerHTML);
     var wrong_value = parseInt(document.getElementById('wrong').innerHTML);
-    var correct_list = [];
-    var wrong_list = [];
+    var correct_list, wrong_list;
+    const fs = require('fs');
+
 
     function generate() {
        var a = Math.floor((Math.random() * 10));
@@ -96,23 +102,42 @@
             document.getElementById("result").innerHTML = "An answer is required!"
         }else {
             if (document.getElementById("insert").value === equals.toString() ) {
-                //correct_list.push(++correct_value);
+                correct_list = ++correct_value;
                 //document.getElementById("correct").innerHTML = correct_list;
-                document.getElementById("correct").innerHTML = ++correct_value;
+                document.getElementById("correct").innerHTML = correct_list;
                 document.getElementById("result").innerHTML = "Correct Answer!";
                 document.getElementById("ClearForm").reset();
                 generate()
             }
             else {
                 document.getElementById("result").innerHTML = "Wrong Answer!";
-                //wrong_list.push(++wrong_value);
+                wrong_list = ++wrong_value;
                 //document.getElementById("wrong").innerHTML = wrong_list;
-                document.getElementById("wrong").innerHTML = ++wrong_value;
+                document.getElementById("wrong").innerHTML = wrong_list;
                 document.getElementById("ClearForm").reset();
                 generate()
             }
         }
     }
+
+/*    function Save(){
+        if (fs.existsSync(file)) {
+            var readStats = fs.readFileSync(file);
+            var stat_list = JSON.parse(readStats);
+            alert(stat_list);
+            alert("go");
+
+            stat_list.wins = correct_list;
+            stat_list.losses = wrong_list;
+
+            var result = JSON.stringify(stat_list, null, 2);
+
+            fs.writeFileSync(file, result, function (err) {
+                if (err){
+                    console.log('Could Not Add!')}
+            });
+        }
+    }*/
 </script>
 </body>
 </html>
