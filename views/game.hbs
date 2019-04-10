@@ -50,7 +50,7 @@
             <button onclick="generate()" type="button" style="padding: 5px">Generate</button>
         </tr><br>
         <tr>
-            <button onclick="Save()" type="button" style="padding: 5px">Save</button>
+            <button onclick="Save()" type="submit" style="padding: 5px">Save</button>
         </tr><br>
 
         <tr>
@@ -81,12 +81,12 @@
 </div>
 
 <script>
-    var file = "game_state.json";
     var equals;
     var correct_value = parseInt(document.getElementById('correct').innerHTML);
     var wrong_value = parseInt(document.getElementById('wrong').innerHTML);
     var correct_list, wrong_list;
     const fs = require('fs');
+    var file = "game_state.json";
 
 
     function generate() {
@@ -120,15 +120,23 @@
         }
     }
 
-/*    function Save(){
+    function Save(){
         if (fs.existsSync(file)) {
             var readStats = fs.readFileSync(file);
             var stat_list = JSON.parse(readStats);
             alert(stat_list);
             alert("go");
 
-            stat_list.wins = correct_list;
-            stat_list.losses = wrong_list;
+            //stat_list.wins = correct_list;
+            //stat_list.losses  = wrong_list;
+
+         /*   stat_list['wins'] = correct_list;
+            stat_list['losses'] = wrong_list;*/
+
+            stat_list.forEach(function(elm){
+                elm.wins = correct_list;
+                elm.losses = wrong_list
+            });
 
             var result = JSON.stringify(stat_list, null, 2);
 
@@ -137,7 +145,7 @@
                     console.log('Could Not Add!')}
             });
         }
-    }*/
+    }
 </script>
 </body>
 </html>

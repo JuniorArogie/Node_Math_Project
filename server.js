@@ -52,24 +52,31 @@ app.get('/', (request, response) => {
     });
 });
 
-/*function requiresLogin(req, res, next) {
-    console.log("before " + req.session.userId);
+/*
+function requiresLogin(req, res, next) {
+    //console.log("before " + req.session.userId);
     if (existing_user.authenticate) {
-        console.log(existing_user.authenticate);
-    //var db = utils.getDb();
-    //db.collection('registration').findOne({username: req.body.username}, function(err, user) {
         return next();
     }else {
         res.send('You must be logged in to view this page.');
     }
-}*/
-
-
-app.get('/mathgame', (request, response) => {
+}
+*/
+/*var db1 = utils.getDb();
+console.log(db1.collection('registration').find().toArray(function(err, user) {
+}));*/
+app.get('/mathgame',(request, response) => {
     response.render('game.hbs', {
         title: 'Math Game',
         head: 'Welcome To The Game Center',
     });
+});
+
+app.get('/created', (request, response) => {
+    response.render('created.hbs', {
+        title: 'created',
+        head: 'User has been created',
+    })
 });
 
 app.get('*', (request, response) => {
@@ -79,6 +86,8 @@ app.get('*', (request, response) => {
         error: 'Page Not Found'
     })
 });
+
+
 
 /*app.use((request, response, next) => {
     response.render('maintenance.hbs', {
