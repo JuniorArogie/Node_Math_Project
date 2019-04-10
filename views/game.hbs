@@ -37,56 +37,75 @@
 <div align="center">
     <h2>{{head}}</h2>
 </div><br>
+<form method="POST" action="/save">
+    <div align="center" id="board">
+        <table>
+            <tr >
+                <td height="100">
+                    <div align="center" id="random1">Calculation</div>
+                </td>
+            </tr>
+            <br>
+            <tr>
+                <button onclick="generate()" type="button" style="padding: 5px">Generate</button>
+            </tr><br>
+            <tr><br>
+                <input onclick="Save()" type="submit" style="padding: 5px" value="Save">
+            <br>
+                <td>
+                    <div id="ClearForm">
+                        <label>Answer:</label>
+                        <label for="insert"></label><input type="number" id="insert" >
+                        <button onclick="Check()" type="button" >Check</button>
+                    </div>
+                </td>
+            </tr>
+            <tr><td><div id="result" align="center"></div></td></tr>
+            <tr>
+                <td>
+                    <table style="width: 100%; border: 2px solid darkred">
+                        <tr>
+                            <th>CORRECT</th>
+                            <th>INCORRECT</th>
+                        </tr>
+                        <tr>
+                            <input name="correct" id="hidden_correct" type="hidden" value=0 >
+                            <input name="wrong" id="hidden_wrong" type="hidden" value=0 >  
 
-<div align="center" id="board">
-    <table>
-        <tr >
-            <td height="100">
-                <div align="center" id="random1">Calculation</div>
-            </td>
-        </tr>
-        <br>
-        <tr>
-            <button onclick="generate()" type="button" style="padding: 5px">Generate</button>
-        </tr><br>
-        <tr>
-            <button onclick="Save()" type="submit" style="padding: 5px">Save</button>
-        </tr><br>
-
-        <tr>
-            <td>
-                <form id="ClearForm">
-                    <label>Answer:</label>
-                    <label for="insert"></label><input type="number" id="insert" >
-                    <button onclick="Check()" type="button" >Check</button>
-                </form>
-            </td>
-        </tr>
-        <tr><td><div id="result" align="center"></div></td></tr>
-        <tr>
-            <td>
-                <table style="width: 100%; border: 2px solid darkred">
-                    <tr>
-                        <th>CORRECT</th>
-                        <th>INCORRECT</th>
-                    </tr>
-                    <tr>
-                        <td><div id="correct">0</div></td>
-                        <td><div id="wrong">0</div></td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</div>
-
+                            <td><div id="correct">0</div></td>
+                            <td><div id="wrong">0</div></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <br><br>
+                        <tr>
+                <td>
+                    <table style="width: 100%; border: 2px solid darkred">
+                        <tr>
+                            <br>
+                            <h2 align="center">Saved Score</h2>
+                            <br>
+                            <th>CORRECT</th>
+                            <th>INCORRECT</th>
+                        </tr>
+                        <tr>
+                            <td><div id="pcorrect">{{pc}}</div></td>
+                            <td><div id="pwrong">{{wc}}</div></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
 <script>
+    //var file = "game_state.json";
     var equals;
     var correct_value = parseInt(document.getElementById('correct').innerHTML);
     var wrong_value = parseInt(document.getElementById('wrong').innerHTML);
     var correct_list, wrong_list;
-    const fs = require('fs');
-    var file = "game_state.json";
+    //const fs = require('fs');
 
 
     function generate() {
@@ -105,46 +124,24 @@
                 correct_list = ++correct_value;
                 //document.getElementById("correct").innerHTML = correct_list;
                 document.getElementById("correct").innerHTML = correct_list;
-                document.getElementById("result").innerHTML = "Correct Answer!";
+                document.getElementById("hidden_correct").value = correct_list;
+                if (document.getElementById("result").innerHTML = "Correct Answer!"){
+                    generate();
+                }
                 document.getElementById("ClearForm").reset();
-                generate()
             }
             else {
-                document.getElementById("result").innerHTML = "Wrong Answer!";
                 wrong_list = ++wrong_value;
                 //document.getElementById("wrong").innerHTML = wrong_list;
                 document.getElementById("wrong").innerHTML = wrong_list;
+                document.getElementById("hidden_wrong").value = wrong_list;
+                if (document.getElementById("result").innerHTML = "Wrong Answer!"){
+                    generate()
+                }
                 document.getElementById("ClearForm").reset();
-                generate()
             }
         }
-    }
-
-    function Save(){
-        if (fs.existsSync(file)) {
-            var readStats = fs.readFileSync(file);
-            var stat_list = JSON.parse(readStats);
-            alert(stat_list);
-            alert("go");
-
-            //stat_list.wins = correct_list;
-            //stat_list.losses  = wrong_list;
-
-         /*   stat_list['wins'] = correct_list;
-            stat_list['losses'] = wrong_list;*/
-
-            stat_list.forEach(function(elm){
-                elm.wins = correct_list;
-                elm.losses = wrong_list
-            });
-
-            var result = JSON.stringify(stat_list, null, 2);
-
-            fs.writeFileSync(file, result, function (err) {
-                if (err){
-                    console.log('Could Not Add!')}
-            });
-        }
+        
     }
 </script>
 </body>

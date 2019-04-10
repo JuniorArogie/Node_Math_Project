@@ -7,6 +7,7 @@ const hbs = require('hbs');
 const utils = require('./utils');
 const MongoStore = require('connect-mongo')(session);
 const mongoose = require('mongoose');
+const fs = require('fs');
 
 mongoose.connect('mongodb://localhost/registration', { useNewUrlParser: true });
 var db = mongoose.connection;
@@ -47,28 +48,43 @@ app.use('/verify', existing_user);
 app.get('/', (request, response) => {
     response.render('home.hbs', {
         title: 'Home Page',
-        head: 'Home of the Dark Knight'
+        head: 'Home of MoMath'
 
     });
 });
-
-/*
-function requiresLogin(req, res, next) {
-    //console.log("before " + req.session.userId);
+/*function requiresLogin(req, res, next) h{
+    console.log("before " + req.session.userId);
     if (existing_user.authenticate) {
+        console.log(existing_user.authenticate);
+    //var db = utils.getDb();
+    //db.collection('registration').findOne({username: req.body.username}, function(err, user) {
         return next();
     }else {
         res.send('You must be logged in to view this page.');
     }
-}
-*/
-/*var db1 = utils.getDb();
-console.log(db1.collection('registration').find().toArray(function(err, user) {
-}));*/
-app.get('/mathgame',(request, response) => {
-    response.render('game.hbs', {
-        title: 'Math Game',
-        head: 'Welcome To The Game Center',
+}*/
+
+app.get('/mathgame', (request, response) => {
+        fs.readFile('game_state.json', function(err, data) {
+        var json = JSON.parse(data);
+        last_entry = Object.values(json)[Object.values(json).length-1]
+
+        if(last_entry === undefined){
+
+            response.render('game.hbs', {
+                title: 'Math Game',
+                head: 'Welcome To The Game Center',
+                pc: 0,
+                wc: 0
+            });
+        }else{
+        response.render('game.hbs', {
+            title: 'Math Game',
+            head: 'Welcome To The Game Center',
+            pc: last_entry["correct"],
+            wc: last_entry["wrong"]
+            });
+        }
     });
 });
 
@@ -87,14 +103,42 @@ app.get('*', (request, response) => {
     })
 });
 
-
-
 /*app.use((request, response, next) => {
     response.render('maintenance.hbs', {
         title: 'Maintenance page',
     });
     next()
 });*/
+
+app.post('/save', function(request, response) {
+    console.log(request.body);
+
+    fs.readFile('game_state.json', function(err, data) {
+        var json = JSON.parse(data);
+
+        if (json.length === 0) {
+            new_id = 0
+            json[new_id] = request.body; 
+        } else {
+            last_index = Object.keys(json).length;
+            new_id = last_index + 1;
+
+            json[new_id] = request.body;
+
+        }
+            response.render('game.hbs', {
+                title: 'Math Game',
+                head: 'Welcome To The Game Center',
+                pc: request.body["correct"],
+                wc: request.body["wrong"]
+                });
+
+        fs.writeFile('game_state.json', JSON.stringify(json, null, 2), function(err) {
+            if (err) console.log(err);
+        });
+    });
+
+});
 
 app.listen(8080, () => {
     console.log('Server is up on the port 8080');
