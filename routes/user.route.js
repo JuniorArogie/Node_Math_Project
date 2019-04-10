@@ -18,13 +18,12 @@ app.post('/add', function(req, res) {
     var password = req.body.password;
     var password2 = req.body.password2;
 
-    console.log(fname)
-
     req.checkBody('fname', 'First Name is required').notEmpty();
     req.checkBody('lname', 'Last Name is required').notEmpty();
     req.checkBody('username', 'Username is required').notEmpty();
     req.checkBody('password', 'Password is required').notEmpty();
     req.checkBody('password2', 'Password does not match').equals(req.body.password);
+    req.checkBody('password', 'Password cannot be less than 8 characters').isLength({ min: 8, max:20 });
 
 
     const errors = req.validationErrors();
@@ -48,7 +47,7 @@ app.post('/add', function(req, res) {
                     if (err){
                         res.redirect('/register');
                     }
-                    res.redirect('/');
+                    res.redirect('/created');
                 });
             }else {
                 res.end("Username already exists")
